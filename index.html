@@ -40,11 +40,17 @@
             
         </div>
         <div class="line my-3 mb-4"></div>
+
+        <div class="mb-4 w-75 mx-auto">
+            <input oninput="searchBookmarks(event)" type="search" class="form-control" id="searchInput" placeholder="Search for a bookmark...">
+        </div>
+
         <table class="text-center table">
             <thead>
                 <th>Index</th>
                 <th>Website Name</th>
                 <th>Visit</th>
+                <th>Update</th>
                 <th>Delete</th>
             </thead>
             <tbody id="tablebody">

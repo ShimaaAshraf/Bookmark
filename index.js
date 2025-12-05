@@ -42,16 +42,17 @@ function handleSubmit() {
 }
 
 // Display sites in the table
-function displaySites() {
+function displaySites(listToDisplay = sitesList) {
     let tableContent = ``;
-    for (let i = 0; i < sitesList.length; i++) {
+    for (let i = 0; i < listToDisplay.length; i++) {
+        const originalIndex = listToDisplay[i].originalIndex !== undefined ? listToDisplay[i].originalIndex : i;
         tableContent += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${sitesList[i].sName}</td>
-                <td><a target="_blank" href="${sitesList[i].sURL}"><button class="btn btn-secondary"><i class="fa-solid fa-eye pe-2"></i>Visit</button></a></td>
-                <td><button onclick="prepareUpdate(${i})" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Update</button></td>
-                <td><button onclick="deleteSite(${i})" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i>Delete</button></td>
+                <td>${listToDisplay[i].sName}</td>
+                <td><a target="_blank" href="${listToDisplay[i].sURL}"><button class="btn btn-secondary"><i class="fa-solid fa-eye pe-2"></i>Visit</button></a></td>
+                <td><button onclick="prepareUpdate(${originalIndex})" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Update</button></td>
+                <td><button onclick="deleteSite(${originalIndex})" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i>Delete</button></td>
             </tr>`;
     }
     document.getElementById('tablebody').innerHTML = tableContent;
@@ -83,6 +84,20 @@ function deleteSite(index) {
     sitesList.splice(index, 1);
     localStorage.setItem('data', JSON.stringify(sitesList)); //update local storage
     displaySites();
+}
+
+// Search for bookmarks
+function searchBookmarks(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredSites = sitesList
+        .map((site, index) => ({ ...site, originalIndex: index })) // Temporarily add original index
+        .filter(site => 
+            site.sName.toLowerCase().includes(searchTerm)
+        );
+    
+    // Pass the filtered list to displaySites
+    // If the search bar is empty, it will show all bookmarks
+    displaySites(filteredSites);
 }
 
 // Validate URL
